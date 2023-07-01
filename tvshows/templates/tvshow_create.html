@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container">
+    <h1 class="mt-3">Add TV Show</h1>
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="title" class="form-label">Title:</label>
+        <input type="text" id="title" name="title" class="form-control">
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">Description:</label>
+        <textarea id="description" name="description" class="form-control"></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="genre" class="form-label">Genre:</label>
+        <input type="text" id="genre" name="genre" class="form-control">
+      </div>
+      <div class="mb-3">
+        <label for="release_date" class="form-label">Release Date:</label>
+        <input type="date" id="release_date" name="release_date" class="form-control">
+      </div>
+      <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+  </div>
+{% endblock %}
+</body>
+</html>
