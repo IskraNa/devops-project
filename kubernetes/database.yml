@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tvshows-db-config
+  namespace: kiii
+data:
+  POSTGRES_DB: tvshows
+  POSTGRES_USER: postgres
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tvshows-db-secret
+  namespace: kiii
+data:
+  password: YWRtaW4=
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: tvshows-db-sts
+  namespace: kiii
+spec:
+  serviceName: db
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+        namespace: kiii
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest
+          envFrom:
+            - configMapRef:
+                name: tvshows-db-config
+          env:
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: tvshows-db-secret
+                  key: password
+            - name: POSTGRES_HOST_AUTH_METHOD
+              value: trust
+            - name: POSTGRES_DB
+              value: "tvshows"
+          ports:
+            - containerPort: 5432
+              name: db-port
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-volume-mount
+      volumes:
+        - name: postgres-volume-mount
+          persistentVolumeClaim:
+            claimName: postgres-pv-claim
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  namespace: kiii
+  labels:
+    app: postgres
+spec:
+  type: ClusterIP
+  selector:
+    app: postgres
+  ports:
+    - port: 5432

@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tvshows-dep-config
+  namespace: kiii
+data:
+  POSTGRES_URL: db.kiii.svc.cluster.local
+  POSTGRES_DB: tvshows
+  POSTGRES_USER: postgres
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tvshows-secret
+  namespace: kiii
+type: Opaque
+data:
+  password: YWRtaW4=
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tvshows-deployment
+  namespace: kiii
+  labels:
+    app: tvshows
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tvshows
+  template:
+    metadata:
+      labels:
+        app: tvshows
+    spec:
+      containers:
+        - name: tvshows
+          image: iskrana/final_project:latest
+          ports:
+            - containerPort: 8000
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: tvshows-dep-config
+          env:
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: tvshows-secret
+                  key: password
+            - name: POSTGRES_DB
+              value: "tvshows"

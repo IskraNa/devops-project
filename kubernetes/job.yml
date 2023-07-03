@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tvshows-job-secret
+  namespace: kiii
+type: Opaque
+data:
+  password: YWRtaW4=
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: tvshows-migrate
+  namespace: kiii
+spec:
+  template:
+    spec:
+      containers:
+        - name: tvshows
+          image: iskrana/final_project:latest
+          command: ["/bin/sh","-c"]
+          args: ["python manage.py makemigrations tvshows && python manage.py migrate"]
+          env:
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: tvshows-job-secret
+                  key: password
+            - name: POSTGRES_HOST
+              value: "db"
+            - name: POSTGRES_NAME
+              value: "tvshows"
+      restartPolicy: Never
+  backoffLimit: 5
