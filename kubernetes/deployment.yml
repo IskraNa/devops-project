@@ -29,7 +29,7 @@ metadata:
   labels:
     app: tvshows
 spec:
-  replicas: 1
+  replicas: 5
   selector:
     matchLabels:
       app: tvshows
@@ -41,6 +41,7 @@ spec:
       containers:
         - name: tvshows
           image: iskrana/final_project:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8000
           imagePullPolicy: Always
@@ -48,12 +49,8 @@ spec:
             - configMapRef:
                 name: tvshows-dep-config
           env:
-            - name: POSTGRES_USER
-              value: "postgres"
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: tvshows-secret
                   key: password
-            - name: POSTGRES_DB
-              value: "tvshows"

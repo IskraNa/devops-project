@@ -3,14 +3,16 @@ kind: Ingress
 metadata:
   name: tvshows-ingress
   namespace: kiii
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   rules:
-    - http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: tvshows-service
-                port:
-                  number: 80
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: tvshows-service
+            port:
+              number: 80

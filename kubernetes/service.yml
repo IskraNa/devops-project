@@ -3,12 +3,10 @@ kind: Service
 metadata:
   name: tvshows-service
   namespace: kiii
-  labels:
-    app: tvshows
 spec:
-  type: LoadBalancer
-  ports:
-    - port: 80
-      targetPort: 8000
   selector:
     app: tvshows
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
