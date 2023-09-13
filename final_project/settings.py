@@ -83,7 +83,7 @@ DATABASES = {
         'NAME': 'tvshows',
         'USER': 'postgres',
         'PASSWORD': os.environ.get("POSTGRES_PASSWORD"),
-        'HOST': 'db',  # Docker Compose service name
+        'HOST': 'db.kiii.svc.cluster.local',  # Docker Compose service name
         'PORT': 5432,  # Default PostgreSQL port
     }
 }
