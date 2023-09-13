@@ -3,6 +3,9 @@ version: "3.9"
 services:
   db:
     image: postgres:latest
+    env_file:
+      - .env
+    container_name: "db"
     volumes:
       - ./data/db:/var/lib/postgresql/data
     environment:
@@ -18,10 +21,10 @@ services:
       - "8000:8000"
     depends_on:
       - db
+    env_file:
+      - .env
     environment:
       - POSTGRES_DB=tvshows
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-
-
 
