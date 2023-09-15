@@ -7,9 +7,6 @@ Needed
 - Python 3.10
 - PostgreSQL
 
-## Running (Normal)
-
-
 ## Running (Docker)
 
 - Create a `.env` file with the environment variables `POSTGRES_USER`, `POSTGRES_PASSWORD`
